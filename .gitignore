@@ -1,0 +1,29 @@
+# Node.js
+node_modules/
+npm-debug.log*
+
+# Environment variables
+.env
+.env.local
+
+# Logs
+*.log
+logs/
+
+# Cache directories
+.cache/
+data/cache/
+data/embeddings/
+
+# Temporary files
+tmp/
+temp/
+xmpl/temp-cap-project/
+
+# IDE
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
