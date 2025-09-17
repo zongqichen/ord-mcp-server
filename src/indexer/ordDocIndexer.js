@@ -11,11 +11,13 @@ export class OrdDocumentationIndexer {
       headingStyle: 'atx',
       codeBlockStyle: 'fenced'
     });
-    
+
     this.cache = new Map();
     this.cacheDir = path.join(process.cwd(), '.ord-cache');
+    // Resolve assets directory relative to this file for offline fallback
+    this.assetsDir = path.resolve(path.dirname(new URL(import.meta.url).pathname), '../../assets');
     this.lastUpdated = null;
-    
+
     // ORD documentation sources
     this.sources = {
       specification: 'https://raw.githubusercontent.com/SAP/open-resource-discovery/main/spec-v1/interfaces/Document.md',
@@ -61,11 +63,11 @@ export class OrdDocumentationIndexer {
   async initialize() {
     await this.ensureCacheDir();
     await this.loadCachedData();
-    
+
     // Check if we need to refresh the cache (daily refresh)
-    const shouldRefresh = !this.lastUpdated || 
+    const shouldRefresh = !this.lastUpdated ||
       (Date.now() - this.lastUpdated) > 24 * 60 * 60 * 1000;
-      
+
     if (shouldRefresh) {
       console.error('Refreshing ORD documentation cache...');
       await this.refreshDocumentation();
@@ -119,19 +121,19 @@ export class OrdDocumentationIndexer {
     try {
       // Fetch specification
       await this.fetchSpecification();
-      
+
       // Fetch schemas
       await this.fetchSchemas();
-      
+
       // Fetch examples
       await this.fetchExamples();
-      
+
       // Fetch CAP ORD plugin docs
       await this.fetchCapOrdDocs();
-      
+
       // Save cache metadata
       await this.saveCacheMetadata();
-      
+
       console.error('Documentation refresh completed');
     } catch (error) {
       console.error('Error refreshing documentation:', error.message);
@@ -145,10 +147,10 @@ export class OrdDocumentationIndexer {
         timeout: 10000,
         headers: { 'User-Agent': 'ORD-MCP-Server/1.0.0' }
       });
-      
+
       const specContent = response.data;
       this.cache.set('specification', specContent);
-      
+
       // Save to cache
       await fs.writeFile(
         path.join(this.cacheDir, 'specification.md'),
@@ -157,9 +159,22 @@ export class OrdDocumentationIndexer {
       );
     } catch (error) {
       console.error('Failed to fetch specification:', error.message);
-      // Use cached version if available
+      // Use cached version if available; otherwise try offline fallback
       if (!this.cache.has('specification')) {
-        throw new Error('No specification data available');
+        try {
+          const fallbackPath = path.join(this.assetsDir, 'specification.md');
+          const fallback = await fs.readFile(fallbackPath, 'utf-8');
+          this.cache.set('specification', fallback);
+          // Save fallback to cache for future use
+          await fs.writeFile(
+            path.join(this.cacheDir, 'specification.md'),
+            fallback,
+            'utf-8'
+          );
+          console.error('Loaded offline fallback specification');
+        } catch (fallbackErr) {
+          throw new Error('No specification data available');
+        }
       }
     }
   }
@@ -170,9 +185,9 @@ export class OrdDocumentationIndexer {
         timeout: 10000,
         headers: { 'User-Agent': 'ORD-MCP-Server/1.0.0' }
       });
-      
+
       const schemas = {};
-      
+
       // Fetch individual schema files
       for (const file of response.data) {
         if (file.type === 'file' && file.name.endsWith('.json')) {
@@ -184,9 +199,9 @@ export class OrdDocumentationIndexer {
           }
         }
       }
-      
+
       this.cache.set('schemas', schemas);
-      
+
       // Save to cache
       await fs.writeFile(
         path.join(this.cacheDir, 'schemas.json'),
@@ -207,15 +222,15 @@ export class OrdDocumentationIndexer {
         timeout: 10000,
         headers: { 'User-Agent': 'ORD-MCP-Server/1.0.0' }
       });
-      
+
       const examples = {};
-      
+
       // Fetch example files
       for (const item of response.data) {
         if (item.type === 'file' && (item.name.endsWith('.json') || item.name.endsWith('.yaml'))) {
           try {
             const exampleResponse = await axios.get(item.download_url);
-            const content = item.name.endsWith('.yaml') 
+            const content = item.name.endsWith('.yaml')
               ? yaml.load(exampleResponse.data)
               : exampleResponse.data;
             examples[item.name] = content;
@@ -224,9 +239,9 @@ export class OrdDocumentationIndexer {
           }
         }
       }
-      
+
       this.cache.set('examples', examples);
-      
+
       // Save to cache
       await fs.writeFile(
         path.join(this.cacheDir, 'examples.json'),
@@ -247,9 +262,9 @@ export class OrdDocumentationIndexer {
         timeout: 10000,
         headers: { 'User-Agent': 'ORD-MCP-Server/1.0.0' }
       });
-      
+
       const capDocs = {};
-      
+
       // Fetch CAP ORD documentation files
       for (const file of response.data) {
         if (file.type === 'file' && file.name.endsWith('.md')) {
@@ -261,9 +276,9 @@ export class OrdDocumentationIndexer {
           }
         }
       }
-      
+
       this.cache.set('capDocs', capDocs);
-      
+
       // Save to cache
       await fs.writeFile(
         path.join(this.cacheDir, 'cap-docs.json'),
@@ -283,13 +298,13 @@ export class OrdDocumentationIndexer {
       lastUpdated: Date.now(),
       version: '1.0.0'
     };
-    
+
     await fs.writeFile(
       path.join(this.cacheDir, 'meta.json'),
       JSON.stringify(meta, null, 2),
       'utf-8'
     );
-    
+
     this.lastUpdated = meta.lastUpdated;
   }
 
@@ -405,44 +420,44 @@ export class OrdDocumentationIndexer {
   truncateContent(content, query, maxLength = 500) {
     const queryIndex = content.toLowerCase().indexOf(query.toLowerCase());
     if (queryIndex === -1) return content.substring(0, maxLength);
-    
+
     const start = Math.max(0, queryIndex - maxLength / 2);
     const end = Math.min(content.length, start + maxLength);
-    
+
     let result = content.substring(start, end);
     if (start > 0) result = '...' + result;
     if (end < content.length) result = result + '...';
-    
+
     return result;
   }
 
   calculateRelevance(text, query) {
     const textLower = text.toLowerCase();
     const queryLower = query.toLowerCase();
-    
+
     // Base relevance if query is found
     let relevance = 1;
-    
+
     // Boost for exact matches
     if (textLower.includes(queryLower)) {
       relevance += 2;
     }
-    
+
     // Boost for word matches
     const queryWords = queryLower.split(/\s+/);
     const textWords = textLower.split(/\s+/);
-    
+
     queryWords.forEach(queryWord => {
       if (textWords.includes(queryWord)) {
         relevance += 1;
       }
     });
-    
+
     // Boost for title matches (if text looks like a heading)
     if (text.startsWith('#') || text.length < 100) {
       relevance += 1;
     }
-    
+
     return relevance;
   }
 }

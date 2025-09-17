@@ -43,7 +43,7 @@ class OrdMcpServer {
 
     this.setupResourceHandlers();
     this.setupToolHandlers();
-    
+
     // Error handling
     this.server.onerror = (error) => console.error('[ORD MCP Error]', error);
     process.on('SIGINT', async () => {
@@ -174,6 +174,11 @@ class OrdMcpServer {
   setupToolHandlers() {
     this.server.setRequestHandler(ListToolsRequestSchema, async () => ({
       tools: [
+        {
+          name: 'get_status',
+          description: 'Get server health, cache status, and data sources availability',
+          inputSchema: { type: 'object', properties: {} }
+        },
         {
           name: 'search_ord_docs',
           description: 'Search ORD documentation using semantic search',
@@ -327,6 +332,8 @@ class OrdMcpServer {
 
       try {
         switch (name) {
+          case 'get_status':
+            return await this.handleGetStatus();
           case 'search_ord_docs':
             return await this.handleSearchOrdDocs(args);
           case 'explain_ord_concept':
@@ -358,7 +365,7 @@ class OrdMcpServer {
     const { query, maxResults = 10 } = args;
     const results = await this.search.searchDocumentation(query, maxResults);
     const formattedResults = this.formatter.formatSearchResults(results);
-    
+
     return {
       content: [{
         type: 'text',
@@ -370,7 +377,7 @@ class OrdMcpServer {
   async handleExplainOrdConcept(args) {
     const { concept, includeExamples = true } = args;
     const explanation = await this.search.explainConcept(concept, includeExamples);
-    
+
     return {
       content: [{
         type: 'text',
@@ -381,7 +388,7 @@ class OrdMcpServer {
 
   async handleGenerateOrdAnnotation(args) {
     const { servicePath, serviceDefinition, annotationType = 'basic' } = args;
-    
+
     let serviceContent;
     if (servicePath) {
       serviceContent = await this.capAnalyzer.readServiceFile(servicePath);
@@ -393,7 +400,7 @@ class OrdMcpServer {
       serviceContent,
       annotationType
     );
-    
+
     return {
       content: [{
         type: 'text',
@@ -404,7 +411,7 @@ class OrdMcpServer {
 
   async handleValidateOrdMetadata(args) {
     const { metadataPath, metadata, strict = false } = args;
-    
+
     let metadataContent;
     if (metadataPath) {
       metadataContent = await this.validator.readMetadataFile(metadataPath);
@@ -413,7 +420,7 @@ class OrdMcpServer {
     }
 
     const validationResult = await this.validator.validateMetadata(metadataContent, strict);
-    
+
     return {
       content: [{
         type: 'text',
@@ -429,7 +436,7 @@ class OrdMcpServer {
       includeFiles,
       suggestionLevel
     );
-    
+
     return {
       content: [{
         type: 'text',
@@ -441,7 +448,7 @@ class OrdMcpServer {
   async handleGetOrdExamples(args) {
     const { useCase, serviceType = 'generic', complexity = 'moderate' } = args;
     const examples = await this.search.getExamples(useCase, serviceType, complexity);
-    
+
     return {
       content: [{
         type: 'text',
@@ -450,10 +457,25 @@ class OrdMcpServer {
     };
   }
 
+  async handleGetStatus() {
+    const status = {
+      indexed: Boolean(this.indexer?.cache && this.indexer.cache.size > 0),
+      lastUpdated: this.indexer?.lastUpdated || null,
+      hasSpecification: this.indexer?.cache?.has('specification') || false,
+      hasSchemas: this.indexer?.cache?.has('schemas') || false,
+      hasExamples: this.indexer?.cache?.has('examples') || false,
+      hasCapDocs: this.indexer?.cache?.has('capDocs') || false
+    };
+
+    return {
+      content: [{ type: 'text', text: JSON.stringify(status, null, 2) }]
+    };
+  }
+
   async run() {
     // Initialize the indexer and search capabilities
     console.error('Initializing ORD MCP server...');
-    
+
     try {
       await this.indexer.initialize();
       await this.search.initialize();
