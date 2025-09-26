@@ -12,11 +12,11 @@ import {
 } from '@modelcontextprotocol/sdk/types.js';
 import axios from 'axios';
 
-class SimpleOrdMcpServer {
+class OrdMcpServer {
   constructor() {
     this.server = new Server(
       {
-        name: 'simple-ord-server',
+        name: 'ord-mcp-server',
         version: '2.0.0',
       },
       {
@@ -27,7 +27,7 @@ class SimpleOrdMcpServer {
       }
     );
 
-    // 简化的 ORD 概念定义
+    // ORD concept definitions
     this.ordConcepts = {
       'Product': {
         description: 'A product represents a commercial offering or logical grouping of capabilities',
@@ -78,7 +78,7 @@ class SimpleOrdMcpServer {
   }
 
   setupHandlers() {
-    // 资源处理
+    // Resource handlers
     this.server.setRequestHandler(ListResourcesRequestSchema, async () => ({
       resources: [
         {
@@ -104,7 +104,7 @@ class SimpleOrdMcpServer {
       throw new McpError(ErrorCode.InvalidRequest, `Unknown resource: ${request.params.uri}`);
     });
 
-    // 工具处理
+    // Tool handlers
     this.server.setRequestHandler(ListToolsRequestSchema, async () => ({
       tools: [
         {
@@ -229,17 +229,17 @@ ${this.getKeyProperties(concept)}
   }
 
   async run() {
-    console.error('Starting Simple ORD MCP Server...');
+    console.error('Starting ORD MCP Server...');
     
     const transport = new StdioServerTransport();
     await this.server.connect(transport);
     
-    console.error('Simple ORD MCP Server running on stdio');
+    console.error('ORD MCP Server running on stdio');
   }
 }
 
-// 启动服务器
-const server = new SimpleOrdMcpServer();
+// Start the server
+const server = new OrdMcpServer();
 server.run().catch(console.error);
 
-export { SimpleOrdMcpServer };
+export { OrdMcpServer };

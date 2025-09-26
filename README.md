@@ -1,52 +1,52 @@
-# Simple ORD MCP Server
+# ORD MCP Server
 
-一个简洁优雅的MCP服务器，专注于提供ORD (Open Resource Discovery) 规范的核心功能。
+A clean and elegant MCP server providing access to ORD (Open Resource Discovery) specification and concept explanations.
 
-## 🎯 设计理念
+## Design Philosophy
 
-这是对原有复杂MCP服务器的重新设计，追求：
-- **简洁性**: 专注于核心功能，去除不必要的复杂性
-- **实时性**: 直接从GitHub获取最新的ORD规范
-- **可读性**: 清晰的代码结构，易于理解和维护
+This is a complete rewrite of the original complex MCP server, focusing on:
+- **Simplicity**: Core functionality without unnecessary complexity
+- **Real-time data**: Direct access to latest ORD specification from GitHub
+- **Maintainability**: Clean, readable code structure
 
-## 🚀 核心功能
+## Core Features
 
-### 1. 实时获取ORD规范
-- 直接从SAP GitHub仓库获取最新的ORD规范文档
-- 无需本地缓存，确保信息始终是最新的
-- 支持作为MCP资源访问
+### 1. Real-time ORD Specification Access
+- Fetches latest ORD specification directly from SAP GitHub repository
+- No local caching - ensures information is always up-to-date
+- Available as both MCP tool and resource
 
-### 2. ORD概念解释
-支持解释以下ORD核心概念：
-- **Product**: 产品定义和商业分组
-- **Package**: 资源容器和分组
-- **ConsumptionBundle**: 消费捆绑包
-- **APIResource**: API资源定义
-- **EventResource**: 事件资源定义
+### 2. ORD Concept Explanations
+Supports explanation of core ORD concepts:
+- **Product**: Commercial offerings and logical capability groupings
+- **Package**: Container for grouping related ORD resources
+- **ConsumptionBundle**: Groups resources typically consumed together
+- **APIResource**: Consumable API definitions
+- **EventResource**: Event resource definitions
 
-每个概念包含：
-- 详细描述
-- JSON示例结构
-- 关键属性说明
-- 使用注意事项
+Each concept includes:
+- Detailed description
+- JSON example structure
+- Key properties explanation
+- Usage guidelines
 
-## 📦 安装和使用
+## Installation and Usage
 
 ```bash
-# 安装依赖
+# Install dependencies
 npm install
 
-# 启动服务器
+# Start the server
 npm start
 
-# 测试服务器
-node test-simple-server.js
+# Development mode with debugging
+npm run dev
 ```
 
-## 🛠 MCP工具
+## MCP Tools
 
 ### `get_ord_specification`
-获取最新的ORD规范文档
+Retrieves the latest ORD specification document from GitHub.
 
 ```json
 {
@@ -56,7 +56,7 @@ node test-simple-server.js
 ```
 
 ### `explain_ord_concept`
-解释ORD概念
+Provides detailed explanation of ORD concepts with examples.
 
 ```json
 {
@@ -67,52 +67,50 @@ node test-simple-server.js
 }
 ```
 
-支持的概念：
+Supported concepts:
 - `Product`
 - `Package` 
 - `ConsumptionBundle`
 - `APIResource`
 - `EventResource`
 
-## 📚 MCP资源
+## MCP Resources
 
 ### `ord://specification/latest`
-提供最新的ORD规范文档作为Markdown格式的资源
+Provides the latest ORD specification document as a Markdown resource.
 
-## 🏗 项目结构
+## Project Structure
 
 ```
 ├── src/
-│   └── simple-ord-server.js    # 主服务器文件
-├── backup/                     # 原有复杂代码备份
-├── test-simple-server.js       # 测试脚本
+│   └── ord-mcp-server.js    # Main server file (~200 lines)
 ├── package.json
 └── README.md
 ```
 
-## 🎨 设计特点
+## Architecture Benefits
 
-1. **单文件架构**: 所有逻辑集中在一个文件中，便于理解和维护
-2. **最小依赖**: 只依赖必要的MCP SDK和axios
-3. **直接API调用**: 不使用复杂的缓存机制，确保数据实时性
-4. **错误处理**: 简洁的错误处理和用户友好的错误信息
-5. **类型安全**: 严格的输入验证和类型检查
+1. **Single-file architecture**: All logic in one file for easy understanding
+2. **Minimal dependencies**: Only MCP SDK and axios required
+3. **Direct API calls**: No complex caching, ensures real-time data
+4. **Robust error handling**: Clean error messages and graceful degradation
+5. **Type safety**: Strict input validation and schema enforcement
 
-## 🔄 与原版本的对比
+## Comparison with Previous Version
 
-| 特性 | 原版本 | 简化版本 |
-|------|--------|----------|
-| 文件数量 | 10+ | 1 |
-| 代码行数 | 1000+ | ~200 |
-| 功能复杂度 | 高 | 简洁 |
-| 启动时间 | 慢 | 快 |
-| 维护难度 | 高 | 低 |
-| 数据实时性 | 缓存延迟 | 实时 |
+| Feature | Previous | Current |
+|---------|----------|---------|
+| Files | 10+ | 1 |
+| Lines of code | 1000+ | ~200 |
+| Complexity | High | Minimal |
+| Startup time | Slow | Fast |
+| Maintenance | Difficult | Easy |
+| Data freshness | Cached/Delayed | Real-time |
 
-## 🚦 状态
+## Status
 
-✅ **生产就绪**: 简化版本已完成核心功能实现，可用于生产环境
+✅ **Production Ready**: Core functionality implemented and tested.
 
-## 📄 许可证
+## License
 
 MIT License
