@@ -5,30 +5,35 @@ A clean and elegant MCP server providing access to ORD (Open Resource Discovery)
 ## Design Philosophy
 
 This is a complete rewrite of the original complex MCP server, focusing on:
-- **Simplicity**: Core functionality without unnecessary complexity
-- **Real-time data**: Direct access to latest ORD specification from GitHub
-- **Maintainability**: Clean, readable code structure
+
+-   **Simplicity**: Core functionality without unnecessary complexity
+-   **Real-time data**: Direct access to latest ORD specification from GitHub
+-   **Maintainability**: Clean, readable code structure
 
 ## Core Features
 
 ### 1. Real-time ORD Specification Access
-- Fetches latest ORD specification directly from SAP GitHub repository
-- No local caching - ensures information is always up-to-date
-- Available as both MCP tool and resource
+
+-   Fetches latest ORD specification directly from SAP GitHub repository
+-   No local caching - ensures information is always up-to-date
+-   Available as both MCP tool and resource
 
 ### 2. ORD Concept Explanations
+
 Supports explanation of core ORD concepts:
-- **Product**: Commercial offerings and logical capability groupings
-- **Package**: Container for grouping related ORD resources
-- **ConsumptionBundle**: Groups resources typically consumed together
-- **APIResource**: Consumable API definitions
-- **EventResource**: Event resource definitions
+
+-   **Product**: Commercial offerings and logical capability groupings
+-   **Package**: Container for grouping related ORD resources
+-   **ConsumptionBundle**: Groups resources typically consumed together
+-   **APIResource**: Consumable API definitions
+-   **EventResource**: Event resource definitions
 
 Each concept includes:
-- Detailed description
-- JSON example structure
-- Key properties explanation
-- Usage guidelines
+
+-   Detailed description
+-   JSON example structure
+-   Key properties explanation
+-   Usage guidelines
 
 ## Installation and Usage
 
@@ -46,37 +51,41 @@ npm run dev
 ## MCP Tools
 
 ### `get_ord_specification`
+
 Retrieves the latest ORD specification document from GitHub.
 
 ```json
 {
-  "name": "get_ord_specification",
-  "arguments": {}
+    "name": "get_ord_specification",
+    "arguments": {}
 }
 ```
 
 ### `explain_ord_concept`
+
 Provides detailed explanation of ORD concepts with examples.
 
 ```json
 {
-  "name": "explain_ord_concept",
-  "arguments": {
-    "concept": "Product"
-  }
+    "name": "explain_ord_concept",
+    "arguments": {
+        "concept": "Product"
+    }
 }
 ```
 
 Supported concepts:
-- `Product`
-- `Package` 
-- `ConsumptionBundle`
-- `APIResource`
-- `EventResource`
+
+-   `Product`
+-   `Package`
+-   `ConsumptionBundle`
+-   `APIResource`
+-   `EventResource`
 
 ## MCP Resources
 
 ### `ord://specification/latest`
+
 Provides the latest ORD specification document as a Markdown resource.
 
 ## Project Structure
@@ -98,18 +107,22 @@ Provides the latest ORD specification document as a Markdown resource.
 
 ## Comparison with Previous Version
 
-| Feature | Previous | Current |
-|---------|----------|---------|
-| Files | 10+ | 1 |
-| Lines of code | 1000+ | ~200 |
-| Complexity | High | Minimal |
-| Startup time | Slow | Fast |
-| Maintenance | Difficult | Easy |
+| Feature        | Previous       | Current   |
+| -------------- | -------------- | --------- |
+| Files          | 10+            | 1         |
+| Lines of code  | 1000+          | ~200      |
+| Complexity     | High           | Minimal   |
+| Startup time   | Slow           | Fast      |
+| Maintenance    | Difficult      | Easy      |
 | Data freshness | Cached/Delayed | Real-time |
 
 ## Status
 
 ✅ **Production Ready**: Core functionality implemented and tested.
+
+## Engineering Profile
+
+A unified assistant + engineering standards profile is in `ENGINEERING_PROFILE.md` (supersedes prior Cline / Copilot separate profiles). Assistants must follow it for generation, refactor, review, debugging, and optimization tasks.
 
 ## License
 
