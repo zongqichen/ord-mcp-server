@@ -13,7 +13,7 @@ export const RESOURCES = Object.freeze([
 export const TOOLS = Object.freeze([
     {
         name: "get_ord_specification",
-        description: "Get the latest ORD specification document",
+        description: "Get and use the latest ORD specification document",
         inputSchema: {
             type: "object",
             properties: {},
