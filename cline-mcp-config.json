@@ -1,0 +1,9 @@
+{
+    "mcpServers": {
+        "ord-mcp-server": {
+            "command": "node",
+            "args": ["/home/d072944/work/ord-mcp-server/src/ord-mcp-server.js"],
+            "env": {}
+        }
+    }
+}

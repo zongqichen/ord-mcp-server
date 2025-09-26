@@ -1,30 +1,30 @@
 {
-  "name": "ord-mcp-server",
-  "version": "1.0.0",
-  "description": "A clean MCP server providing ORD specification access and concept explanations",
-  "type": "module",
-  "main": "src/ord-mcp-server.js",
-  "bin": {
-    "ord-mcp-server": "src/ord-mcp-server.js"
-  },
-  "scripts": {
-    "start": "node src/ord-mcp-server.js",
-    "dev": "node --inspect src/ord-mcp-server.js"
-  },
-  "dependencies": {
-    "@modelcontextprotocol/sdk": "^0.5.0",
-    "axios": "^1.6.0"
-  },
-  "keywords": [
-    "mcp",
-    "ord",
-    "cap",
-    "documentation",
-    "sap"
-  ],
-  "author": "ORD MCP Server",
-  "license": "MIT",
-  "engines": {
-    "node": ">=18.0.0"
-  }
+    "name": "ord-mcp-server",
+    "version": "0.0.1",
+    "description": "A clean MCP server providing ORD specification access and concept explanations",
+    "type": "module",
+    "main": "src/ord-mcp-server.js",
+    "bin": {
+        "ord-mcp-server": "src/ord-mcp-server.js"
+    },
+    "scripts": {
+        "start": "node src/ord-mcp-server.js",
+        "dev": "node --inspect src/ord-mcp-server.js"
+    },
+    "dependencies": {
+        "@modelcontextprotocol/sdk": "^0.5.0",
+        "axios": "^1.6.0"
+    },
+    "keywords": [
+        "mcp",
+        "ord",
+        "cap",
+        "documentation",
+        "sap"
+    ],
+    "author": "ORD MCP Server",
+    "license": "MIT",
+    "engines": {
+        "node": ">=18.0.0"
+    }
 }
