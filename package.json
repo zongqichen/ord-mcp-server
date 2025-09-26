@@ -1,26 +1,19 @@
 {
   "name": "ord-mcp-server",
   "version": "1.0.0",
-  "description": "An MCP server providing ORD documentation and CAP annotation assistance",
+  "description": "A clean MCP server providing ORD specification access and concept explanations",
   "type": "module",
-  "main": "src/index.js",
+  "main": "src/ord-mcp-server.js",
   "bin": {
-    "ord-mcp-server": "src/index.js"
+    "ord-mcp-server": "src/ord-mcp-server.js"
   },
   "scripts": {
-    "start": "node src/index.js",
-    "dev": "node --inspect src/index.js",
-    "test": "node test/simple-test.js",
-    "demo": "node xmpl/demo.js",
-    "smoke": "node test/mcp-smoke.js"
+    "start": "node src/ord-mcp-server.js",
+    "dev": "node --inspect src/ord-mcp-server.js"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^0.5.0",
-    "axios": "^1.6.0",
-    "cheerio": "^1.0.0-rc.12",
-    "node-fetch": "^3.3.0",
-    "turndown": "^7.1.0",
-    "js-yaml": "^4.1.0"
+    "axios": "^1.6.0"
   },
   "keywords": [
     "mcp",
