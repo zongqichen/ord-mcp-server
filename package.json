@@ -3,13 +3,13 @@
   "version": "1.0.0",
   "description": "An MCP server providing ORD documentation and CAP annotation assistance",
   "type": "module",
-  "main": "src/index.js",
+  "main": "src/simple-ord-server.js",
   "bin": {
-    "ord-mcp-server": "src/index.js"
+    "ord-mcp-server": "src/simple-ord-server.js"
   },
   "scripts": {
-    "start": "node src/index.js",
-    "dev": "node --inspect src/index.js",
+    "start": "node src/simple-ord-server.js",
+    "dev": "node --inspect src/simple-ord-server.js",
     "test": "node test/simple-test.js",
     "demo": "node xmpl/demo.js",
     "smoke": "node test/mcp-smoke.js"

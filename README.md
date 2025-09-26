@@ -1,274 +1,118 @@
-# ORD MCP Server
+# Simple ORD MCP Server
 
-A Model Context Protocol (MCP) server that provides comprehensive ORD (Open Resource Discovery) documentation, explanations, and code generation capabilities for CAP (Cloud Application Programming) developers.
+一个简洁优雅的MCP服务器，专注于提供ORD (Open Resource Discovery) 规范的核心功能。
 
-## Overview
+## 🎯 设计理念
 
-This MCP server helps developers understand and implement ORD metadata in their CAP services by providing:
+这是对原有复杂MCP服务器的重新设计，追求：
+- **简洁性**: 专注于核心功能，去除不必要的复杂性
+- **实时性**: 直接从GitHub获取最新的ORD规范
+- **可读性**: 清晰的代码结构，易于理解和维护
 
-- **Official ORD Documentation**: Indexed and searchable ORD specification and examples
-- **Concept Explanations**: Detailed explanations of ORD concepts (Product, Capability, API Resource, etc.)
-- **Code Generation**: Automatic generation of ORD annotations for CAP services
-- **Project Analysis**: Analysis of existing CAP projects for ORD compliance
-- **Validation**: Comprehensive validation of ORD metadata against specifications
+## 🚀 核心功能
 
-## Features
+### 1. 实时获取ORD规范
+- 直接从SAP GitHub仓库获取最新的ORD规范文档
+- 无需本地缓存，确保信息始终是最新的
+- 支持作为MCP资源访问
 
-### Core Functionality
+### 2. ORD概念解释
+支持解释以下ORD核心概念：
+- **Product**: 产品定义和商业分组
+- **Package**: 资源容器和分组
+- **ConsumptionBundle**: 消费捆绑包
+- **APIResource**: API资源定义
+- **EventResource**: 事件资源定义
 
-1. **Search ORD Documentation** - Full-text search across official ORD documentation
-2. **Explain ORD Concepts** - Detailed explanations with examples for each ORD concept
-3. **Generate Annotations** - Create ORD annotations for CAP services automatically
-4. **Analyze CAP Projects** - Scan projects for existing ORD metadata and suggest improvements
-5. **Validate ORD Metadata** - Comprehensive validation with detailed error reporting
+每个概念包含：
+- 详细描述
+- JSON示例结构
+- 关键属性说明
+- 使用注意事项
 
-### Supported ORD Concepts
+## 📦 安装和使用
 
-- **Products**: Commercial offerings and logical groupings of capabilities
-- **Capabilities**: Business functionalities provided by products
-- **API Resources**: Consumable APIs (REST, OData, GraphQL, etc.)
-- **Event Resources**: Business and technical events for event-driven architectures
-- **Consumption Bundles**: Logical groupings of resources with authentication strategies
-- **Packages**: Containers for versioning and lifecycle management
-
-## Installation
-
-### Prerequisites
-
-- Node.js 18 or higher
-- A compatible MCP client (like Cline or Claude Desktop)
-
-### Setup
-
-1. Clone the repository:
 ```bash
-git clone <repository-url>
-cd ord-mcp-server
-```
-
-2. Install dependencies:
-```bash
+# 安装依赖
 npm install
+
+# 启动服务器
+npm start
+
+# 测试服务器
+node test-simple-server.js
 ```
 
-3. Test the server:
-```bash
-npm test
-```
+## 🛠 MCP工具
 
-### MCP Client Configuration
+### `get_ord_specification`
+获取最新的ORD规范文档
 
-Add the following to your MCP client configuration:
-
-#### For Claude Desktop (`claude_desktop_config.json`):
 ```json
 {
-  "mcpServers": {
-    "ord-server": {
-      "command": "node",
-      "args": ["path/to/ord-mcp-server/src/index.js"],
-      "env": {}
-    }
+  "name": "get_ord_specification",
+  "arguments": {}
+}
+```
+
+### `explain_ord_concept`
+解释ORD概念
+
+```json
+{
+  "name": "explain_ord_concept",
+  "arguments": {
+    "concept": "Product"
   }
 }
 ```
 
-#### For Cline (VSCode extension):
-```json
-{
-  "mcp": {
-    "ord-server": {
-      "command": "node",
-      "args": ["path/to/ord-mcp-server/src/index.js"]
-    }
-  }
-}
+支持的概念：
+- `Product`
+- `Package` 
+- `ConsumptionBundle`
+- `APIResource`
+- `EventResource`
+
+## 📚 MCP资源
+
+### `ord://specification/latest`
+提供最新的ORD规范文档作为Markdown格式的资源
+
+## 🏗 项目结构
+
+```
+├── src/
+│   └── simple-ord-server.js    # 主服务器文件
+├── backup/                     # 原有复杂代码备份
+├── test-simple-server.js       # 测试脚本
+├── package.json
+└── README.md
 ```
 
-## Usage
+## 🎨 设计特点
 
-Once configured with your MCP client, you can use the following tools:
+1. **单文件架构**: 所有逻辑集中在一个文件中，便于理解和维护
+2. **最小依赖**: 只依赖必要的MCP SDK和axios
+3. **直接API调用**: 不使用复杂的缓存机制，确保数据实时性
+4. **错误处理**: 简洁的错误处理和用户友好的错误信息
+5. **类型安全**: 严格的输入验证和类型检查
 
-### 1. Search ORD Documentation
-```
-search_ord_documentation(query, maxResults?)
-```
-Search through official ORD documentation, specifications, and examples.
+## 🔄 与原版本的对比
 
-**Example:**
-```
-search_ord_documentation("API Resource entry points", 5)
-```
+| 特性 | 原版本 | 简化版本 |
+|------|--------|----------|
+| 文件数量 | 10+ | 1 |
+| 代码行数 | 1000+ | ~200 |
+| 功能复杂度 | 高 | 简洁 |
+| 启动时间 | 慢 | 快 |
+| 维护难度 | 高 | 低 |
+| 数据实时性 | 缓存延迟 | 实时 |
 
-### 2. Explain ORD Concepts
-```
-explain_ord_concept(concept, includeExamples?)
-```
-Get detailed explanations of ORD concepts with examples.
+## 🚦 状态
 
-**Example:**
-```
-explain_ord_concept("Capability", true)
-```
+✅ **生产就绪**: 简化版本已完成核心功能实现，可用于生产环境
 
-### 3. Generate ORD Annotations
-```
-generate_ord_annotation(serviceContent, annotationType?)
-```
-Generate ORD annotations for CAP service definitions.
+## 📄 许可证
 
-**Parameters:**
-- `serviceContent`: CDS service definition content
-- `annotationType`: "basic", "comprehensive", or "minimal" (default: "basic")
-
-**Example:**
-```
-generate_ord_annotation(serviceContent, "comprehensive")
-```
-
-### 4. Analyze CAP Project
-```
-analyze_cap_project(projectPath, includeFiles?, suggestionLevel?)
-```
-Analyze a CAP project for ORD compliance and get suggestions.
-
-**Parameters:**
-- `projectPath`: Path to the CAP project
-- `includeFiles`: Optional array of specific files to analyze
-- `suggestionLevel`: "basic", "detailed", or "comprehensive" (default: "detailed")
-
-### 5. Validate ORD Metadata
-```
-validate_ord_metadata(metadata, strict?)
-```
-Validate ORD metadata against specifications.
-
-**Parameters:**
-- `metadata`: ORD metadata object or path to metadata file
-- `strict`: Enable strict validation mode (default: false)
-
-### 6. Get ORD Examples
-```
-get_ord_examples(useCase, serviceType?, complexity?)
-```
-Get relevant ORD examples based on use case.
-
-**Parameters:**
-- `useCase`: Type of example needed (e.g., "REST API", "Events", "OData")
-- `serviceType`: "rest", "odata", "event", etc. (default: "generic")
-- `complexity`: "minimal", "moderate", "comprehensive" (default: "moderate")
-
-## Example Workflows
-
-### Adding ORD to a New CAP Service
-
-1. **Analyze your project**:
-```
-analyze_cap_project("/path/to/my-cap-project", null, "comprehensive")
-```
-
-2. **Generate annotations** for your service:
-```
-generate_ord_annotation(myServiceContent, "comprehensive")
-```
-
-3. **Validate** the generated metadata:
-```
-validate_ord_metadata(generatedMetadata, true)
-```
-
-### Understanding ORD Concepts
-
-1. **Get an overview** of a concept:
-```
-explain_ord_concept("ConsumptionBundle")
-```
-
-2. **Search for specific information**:
-```
-search_ord_documentation("consumption bundle authentication")
-```
-
-3. **Get practical examples**:
-```
-get_ord_examples("OAuth consumption bundle", "rest", "comprehensive")
-```
-
-## Architecture
-
-The server consists of several key components:
-
-- **Documentation Indexer** (`src/indexer/ordDocIndexer.js`): Fetches and indexes official ORD documentation
-- **Semantic Search** (`src/search/semanticSearch.js`): Provides intelligent search and concept explanations
-- **CAP Analyzer** (`src/analyzers/capAnalyzer.js`): Analyzes CAP projects for ORD compliance
-- **Annotation Generator** (`src/generators/annotationGenerator.js`): Generates ORD annotations for services
-- **ORD Validator** (`src/analyzers/ordValidator.js`): Validates ORD metadata against specifications
-
-## Data Sources
-
-The server automatically fetches and caches data from:
-
-- [ORD Specification](https://github.com/SAP/open-resource-discovery) - Official ORD specification and schemas
-- [CAP ORD Plugin Documentation](https://github.com/cap-js/ord) - CAP-specific ORD integration documentation
-- JSON Schemas and examples from the official repositories
-
-Data is cached locally and refreshed daily to ensure up-to-date information.
-
-## Configuration
-
-### Environment Variables
-
-- `ORD_CACHE_TTL`: Cache time-to-live in milliseconds (default: 24 hours)
-- `ORD_FETCH_TIMEOUT`: HTTP request timeout in milliseconds (default: 10 seconds)
-
-### Cache Management
-
-The server maintains a local cache in `.ord-cache/` directory:
-- `meta.json`: Cache metadata and timestamps
-- `specification.md`: ORD specification document
-- `schemas.json`: JSON schemas for validation
-- `examples.json`: Official examples
-- `cap-docs.json`: CAP ORD plugin documentation
-
-## Troubleshooting
-
-### Common Issues
-
-1. **Server fails to start**:
-   - Ensure Node.js 18+ is installed
-   - Check that all dependencies are installed (`npm install`)
-   - Verify the MCP client configuration
-
-2. **Documentation not loading**:
-   - Check internet connectivity for initial data fetch
-   - Clear cache directory and restart: `rm -rf .ord-cache`
-
-3. **Validation errors**:
-   - Ensure your ORD metadata follows the correct schema
-   - Use `validate_ord_metadata` tool to get detailed error reports
-
-### Debug Mode
-
-Run with debug logging:
-```bash
-DEBUG=ord-mcp-server node src/index.js
-```
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests for new functionality
-5. Submit a pull request
-
-## License
-
-MIT License - see LICENSE file for details.
-
-## Related Resources
-
-- [ORD Specification](https://github.com/SAP/open-resource-discovery)
-- [CAP ORD Plugin](https://github.com/cap-js/ord)
-- [CAP Documentation](https://cap.cloud.sap/docs/)
-- [Model Context Protocol](https://modelcontextprotocol.io/)
+MIT License
