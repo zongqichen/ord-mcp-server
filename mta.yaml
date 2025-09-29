@@ -1,0 +1,59 @@
+_schema-version: 3.3.0
+ID: ord-mcp-server
+version: 0.0.1
+description: "A clean MCP server providing ORD specification access and concept explanations"
+parameters:
+    enable-parallel-deployments: true
+build-parameters:
+    before-all:
+        - builder: custom
+          commands:
+              - npm ci
+              - npx cds build --production
+modules:
+    - name: ord-mcp-server-srv
+      type: nodejs
+      path: gen/srv
+      parameters:
+          instances: 1
+          buildpack: nodejs_buildpack
+      build-parameters:
+          builder: npm-ci
+      provides:
+          - name: srv-api # required by consumers of CAP services (e.g. approuter)
+            properties:
+                srv-url: ${default-url}
+      requires:
+          - name: ord-mcp-server-auth
+
+    - name: ord-mcp-server
+      type: approuter.nodejs
+      path: app/router
+      parameters:
+          keep-existing-routes: true
+          disk-quota: 256M
+          memory: 256M
+      requires:
+          - name: srv-api
+            group: destinations
+            properties:
+                name: srv-api # must be used in xs-app.json as well
+                url: ~{srv-url}
+                forwardAuthToken: true
+          - name: ord-mcp-server-auth
+      provides:
+          - name: app-api
+            properties:
+                app-protocol: ${protocol}
+                app-uri: ${default-uri}
+
+resources:
+    - name: ord-mcp-server-auth
+      type: org.cloudfoundry.managed-service
+      parameters:
+          service: xsuaa
+          service-plan: application
+          path: ./xs-security.json
+          config:
+              xsappname: ord-mcp-server-${org}-${space}
+              tenant-mode: dedicated

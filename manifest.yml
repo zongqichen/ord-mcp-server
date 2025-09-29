@@ -1,0 +1,37 @@
+---
+applications:
+- name: ord-mcp-server
+  memory: 512M
+  instances: 1
+  buildpacks:
+    - nodejs_buildpack
+  # Use CDS serve for BTP deployment
+  command: npm run start:cds
+  env:
+    NODE_ENV: production
+    CDS_ENV: production
+  health-check-type: http
+  health-check-http-endpoint: /health
+  timeout: 180
+  services:
+    - ord-uaa
+  routes:
+    - route: ord-mcp-server-${random-word}.cfapps.eu10.hana.ondemand.com
+
+# Alternative deployment for pure MCP HTTP mode  
+- name: ord-mcp-http
+  memory: 256M
+  instances: 1
+  buildpacks:
+    - nodejs_buildpack
+  command: npm run start:http
+  env:
+    NODE_ENV: production
+    HTTP_MODE: true
+  health-check-type: http
+  health-check-http-endpoint: /health
+  timeout: 180
+  services: []
+  routes:
+    - route: ord-mcp-http-${random-word}.cfapps.eu10.hana.ondemand.com
+  no-route: false

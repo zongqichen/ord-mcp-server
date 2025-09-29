@@ -1,0 +1,50 @@
+{
+  "welcomeFile": "app/index.html",
+  "routes": [
+    {
+      "source": "^/mcp/message$",
+      "target": "/mcp/message",
+      "destination": "srv-api",
+      "authenticationType": "none",
+      "cacheControl": "no-cache, no-store, must-revalidate"
+    },
+    {
+      "source": "^/mcp/info$",
+      "target": "/mcp/info",
+      "destination": "srv-api",
+      "authenticationType": "none",
+      "cacheControl": "no-cache, no-store, must-revalidate"
+    },
+    {
+      "source": "^/health$",
+      "target": "/health",
+      "destination": "srv-api",
+      "authenticationType": "none",
+      "cacheControl": "no-cache, no-store, must-revalidate"
+    },
+    {
+      "source": "^/odata/v4/ORDMCPServer/(.*)$",
+      "target": "/odata/v4/ORDMCPServer/$1",
+      "destination": "srv-api",
+      "authenticationType": "none",
+      "cacheControl": "no-cache, no-store, must-revalidate"
+    },
+    {
+      "source": "^/app/(.*)$",
+      "target": "$1",
+      "localDir": ".",
+      "cacheControl": "no-cache, no-store, must-revalidate"
+    },
+    {
+      "source": "^/appconfig/",
+      "localDir": ".",
+      "cacheControl": "no-cache, no-store, must-revalidate"
+    },
+    {
+      "source": "^/(.*)$",
+      "target": "$1",
+      "destination": "srv-api",
+      "csrfProtection": false
+    }
+  ]
+}
