@@ -1,19 +1,19 @@
 #!/usr/bin/env node
 
-import { Server } from "@modelcontextprotocol/sdk/server/index.js";
-import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import {
+const { Server } = require("@modelcontextprotocol/sdk/server/index.js");
+const { StdioServerTransport } = require("@modelcontextprotocol/sdk/server/stdio.js");
+const {
     CallToolRequestSchema,
     ErrorCode,
     ListResourcesRequestSchema,
     ListToolsRequestSchema,
     McpError,
     ReadResourceRequestSchema,
-} from "@modelcontextprotocol/sdk/types.js";
+} = require("@modelcontextprotocol/sdk/types.js");
 
-import { RESOURCES, TOOLS } from "./mcp-definitions.js";
-import { handleGetSpecification, handleExplainConcept } from "./mcp-handlers.js";
-import { fetchSpecification } from "./specification-fetcher.js";
+const { RESOURCES, TOOLS } = require("./mcp-definitions.js");
+const { handleGetSpecification, handleExplainConcept } = require("./mcp-handlers.js");
+const { fetchSpecification } = require("./specification-fetcher.js");
 
 class OrdMcpServer {
     constructor() {
@@ -117,8 +117,8 @@ async function main() {
 }
 
 // Only execute if this is the main module
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (require.main === module) {
     main();
 }
 
-export { OrdMcpServer };
+module.exports = { OrdMcpServer };

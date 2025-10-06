@@ -2,18 +2,23 @@
     "name": "ord-mcp-server",
     "version": "0.0.1",
     "description": "A clean MCP server providing ORD specification access and concept explanations",
-    "type": "module",
     "main": "src/ord-mcp-server.js",
     "bin": {
         "ord-mcp-server": "src/ord-mcp-server.js"
     },
     "scripts": {
-        "start": "node src/ord-mcp-server.js",
-        "dev": "node --inspect src/ord-mcp-server.js"
+        "start": "cds-serve",
+        "start:stdio": "node srv/ord-mcp-server.js",
+        "start:http": "cds watch",
+        "dev": "cds watch",
+        "dev:stdio": "node --inspect srv/ord-mcp-server.js"
     },
     "dependencies": {
+        "@cap-js/hana": "^2",
         "@modelcontextprotocol/sdk": "^0.5.0",
-        "axios": "^1.6.0"
+        "@sap/cds": "^9.4.0",
+        "axios": "^1.6.0",
+        "@sap/xssec": "^4"
     },
     "keywords": [
         "mcp",
@@ -25,6 +30,16 @@
     "author": "ORD MCP Server",
     "license": "MIT",
     "engines": {
-        "node": ">=18.0.0"
+        "node": ">=22.0.0"
+    },
+    "cds": {
+        "requires": {
+            "[production]": {
+                "auth": "xsuaa"
+            }
+        }
+    },
+    "devDependencies": {
+        "@sap/cds-dk": "^9"
     }
 }

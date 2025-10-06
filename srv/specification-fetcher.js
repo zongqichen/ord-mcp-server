@@ -1,9 +1,9 @@
 // Isolated I/O operations for fetching ORD specification
-import axios from "axios";
-import { ORD_SPEC_URL, REQUEST_TIMEOUT_MS } from "./constants.js";
+const axios = require("axios");
+const { ORD_SPEC_URL, REQUEST_TIMEOUT_MS } = require("./constants.js");
 
 // Isolated I/O operations with explicit error handling
-export async function fetchSpecification() {
+async function fetchSpecification() {
     try {
         const response = await axios.get(ORD_SPEC_URL, {
             timeout: REQUEST_TIMEOUT_MS,
@@ -27,3 +27,5 @@ export async function fetchSpecification() {
         throw new Error(`Network error: ${error.message}`);
     }
 }
+
+module.exports = { fetchSpecification };

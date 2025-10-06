@@ -1,8 +1,8 @@
 // MCP tool handlers - validate at boundary, pure logic inside
-import { fetchSpecification } from "./specification-fetcher.js";
-import { validateConceptName, buildConceptExplanation } from "./ord-concepts.js";
+const { fetchSpecification } = require("./specification-fetcher.js");
+const { validateConceptName, buildConceptExplanation } = require("./ord-concepts.js");
 
-export async function handleGetSpecification() {
+async function handleGetSpecification() {
     const spec = await fetchSpecification();
     return {
         content: [
@@ -14,7 +14,7 @@ export async function handleGetSpecification() {
     };
 }
 
-export async function handleExplainConcept(args) {
+async function handleExplainConcept(args) {
     // Validate at ingress
     if (!args || typeof args !== "object") {
         throw new Error("Invalid arguments: expected object");
@@ -32,3 +32,5 @@ export async function handleExplainConcept(args) {
         ],
     };
 }
+
+module.exports = { handleGetSpecification, handleExplainConcept };

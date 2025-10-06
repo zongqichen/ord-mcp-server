@@ -136,4 +136,4 @@ function buildConceptExplanation(concept) {
 }
 
 // Public API
-export { ORD_CONCEPTS, validateConceptName, buildConceptExplanation };
+module.exports = { ORD_CONCEPTS, validateConceptName, buildConceptExplanation };

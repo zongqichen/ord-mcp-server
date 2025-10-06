@@ -1,7 +1,7 @@
 // Resource and tool definitions - stable contracts
-import { ORD_CONCEPTS } from "./ord-concepts.js";
+const { ORD_CONCEPTS } = require("./ord-concepts.js");
 
-export const RESOURCES = Object.freeze([
+const RESOURCES = Object.freeze([
     {
         uri: "ord://specification/latest",
         name: "ORD Specification",
@@ -10,7 +10,7 @@ export const RESOURCES = Object.freeze([
     },
 ]);
 
-export const TOOLS = Object.freeze([
+const TOOLS = Object.freeze([
     {
         name: "get_ord_specification",
         description: "Get and use the latest ORD specification document",
@@ -37,3 +37,5 @@ export const TOOLS = Object.freeze([
         },
     },
 ]);
+
+module.exports = { RESOURCES, TOOLS };
