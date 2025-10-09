@@ -473,5 +473,55 @@ const ORD_CONCEPTS = Object.freeze({
     },
 });
 
+// Helper function to validate concept names
+export function validateConceptName(conceptName) {
+    if (!conceptName || typeof conceptName !== "string") {
+        throw new Error("Concept name must be a non-empty string");
+    }
+    
+    const normalizedName = conceptName.trim();
+    if (!normalizedName) {
+        throw new Error("Concept name cannot be empty or whitespace only");
+    }
+    
+    // Check if the concept exists in our ORD_CONCEPTS
+    const conceptKeys = Object.keys(ORD_CONCEPTS);
+    const matchingKey = conceptKeys.find(key => 
+        key.toLowerCase() === normalizedName.toLowerCase()
+    );
+    
+    if (!matchingKey) {
+        const availableConcepts = conceptKeys.join(", ");
+        throw new Error(`Unknown concept: ${normalizedName}. Available concepts: ${availableConcepts}`);
+    }
+    
+    return matchingKey;
+}
+
+// Helper function to build concept explanations
+export function buildConceptExplanation(conceptName) {
+    const concept = ORD_CONCEPTS[conceptName];
+    if (!concept) {
+        throw new Error(`Concept ${conceptName} not found`);
+    }
+    
+    let explanation = `# ORD Concept: ${conceptName}\n\n`;
+    explanation += `## Description\n${concept.description}\n\n`;
+    
+    if (concept.keyProperties && concept.keyProperties.length > 0) {
+        explanation += `## Key Properties\n`;
+        concept.keyProperties.forEach(property => {
+            explanation += `- ${property}\n`;
+        });
+        explanation += `\n`;
+    }
+    
+    if (concept.example) {
+        explanation += `## Example\n\`\`\`json\n${JSON.stringify(concept.example, null, 2)}\n\`\`\`\n\n`;
+    }
+    
+    return explanation;
+}
+
 // Export the concepts and helper functions
 export { ORD_CONCEPTS };
